@@ -2,14 +2,13 @@
 """PyPoll Homework Challenge Solution."""
 
 # Add our dependencies.
-from ast import For
 import csv
 import os
 
 # Add a variable to load a file from a path.
-file_to_load = os.path.join("..", "Resources", "election_results.csv")
+file_to_load = os.path.join("/Users/adamjoy/Desktop/Election_Analysis/Resources/Resources/election_results.csv")
 # Add a variable to save the file to a path.
-file_to_save = os.path.join("analysis", "election_analysis.txt")
+file_to_save = os.path.join("/Users/adamjoy/Desktop/Election_Analysis/Resources/analysis/election_results.txt")
 
 # Initialize a total vote counter.
 total_votes = 0
@@ -29,8 +28,9 @@ winning_count = 0
 winning_percentage = 0
 
 # 2: Track the largest county and county voter turnout.
-winning_county = ""
-winning_count_county = 0
+largest_county = ""
+largest_count = 0
+largest_percentage = 0
 
 
 
@@ -45,7 +45,7 @@ with open(file_to_load) as election_results:
     for row in reader:
 
         # Add to the total vote count
-        total_votes = total_votes + 1
+        total_votes += 1
 
         # Get the candidate name from each row.
         candidate_name = row[2]
@@ -74,7 +74,7 @@ with open(file_to_load) as election_results:
             county_options.append(county_name)
 
             # 4c: Begin tracking the county's vote count.
-            county_votes[county_name] == 0
+            county_votes[county_name] = 0
         
 
         # 5: Add a vote to that county's vote count.
@@ -83,38 +83,50 @@ with open(file_to_load) as election_results:
 
 # Save the results to our text file.
 with open(file_to_save, "w") as txt_file:
+    
 
     # Print the final vote count (to terminal)
     election_results = (
-        f"\nElection Results\n"
-        f"-------------------------\n"
-        f"Total Votes: {total_votes:,}\n"
-        f"-------------------------\n\n"
-        f"County Votes:\n")
+    f"\nElection Results\n"
+    f"-------------------------\n"
+    f"Total Votes: {total_votes:,}\n"
+    f"-------------------------\n"
+    f"County Votes:\n")
     print(election_results, end="")
 
     txt_file.write(election_results)
 
     # 6a: Write a for loop to get the county from the county dictionary.
-for county_name in county_votes:
+    for county_name in county_votes:
         # 6b: Retrieve the county vote count.
-    votes_county = county_votes[county_name]
+        votes = county_votes[county_name]
         # 6c: Calculate the percentage of votes for the county.
-    vote_percentage_county = int(votes_county)/ int(total_votes) * 100
+        vote_percentage= float(votes) / float(total_votes) * 100
 
          # 6d: Print the county results to the terminal.
-    county_results = (
-        f"{county_name}: {vote_percentage_county: .1f%}% ({votes_county:,})\n")
-         # 6e: Save the county votes to a text file.
+        county_results = (
+            f"{county_name}: {vote_percentage:.1f}% ({votes:,})\n")
+        print(county_results)
     
+         # 6e: Save the county votes to a text file.
+        txt_file.write(county_results)
          # 6f: Write an if statement to determine the winning county and get its vote count.
-if (votes_county > winning_count_county) and (vote_percentage_county 
+        if (votes > largest_count) and (vote_percentage > largest_percentage):
+                largest_count = votes
+                largest_county = county_name
+                largest_percentage = vote_percentage
 
     # 7: Print the county with the largest turnout to the terminal.
-    print(winning_county)
+    largest_county_summary = (
+    f"-------------------------------\n"
+    f"Largest County Turnout: {largest_county}\n"
+    f"-------------------------------\n"
+    )
+    print(largest_county_summary)
+
 
     # 8: Save the county with the largest turnout to a text file.
-
+    txt_file.write(largest_county_summary)
 
     # Save the final candidate vote count to the text file.
     for candidate_name in candidate_votes:
@@ -147,4 +159,4 @@ if (votes_county > winning_count_county) and (vote_percentage_county
     print(winning_candidate_summary)
 
     # Save the winning candidate's name to the text file
-    txt_file.write(winning_candidate_summary)
+    txt_file.write(winning_candidate_summary) 
